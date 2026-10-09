@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2>About Campus Route Finder</h2>
+    <p>
+        Campus Route Finder is a web application designed to help students, faculty, and visitors find the shortest walking route between any two buildings on campus using pure graph algorithms.
+    </p>
+
+    <h3>How Breadth-First Search (BFS) Finds the Shortest Route</h3>
+    <ol class="steps-list">
+        <li>
+            <strong>Queue Setup:</strong> We place the starting building into a First-In, First-Out (FIFO) queue and mark it as Level 0.
+        </li>
+        <li>
+            <strong>Visit Neighbors Level by Level:</strong> We remove the next building from the front of the queue, examine all its connected walkway neighbors, and add any unvisited, open buildings to the back of the queue at the next level (Level + 1).
+        </li>
+        <li>
+            <strong>Remember Parents:</strong> Whenever a new building is discovered, we record the building that discovered it in a <code>parents</code> dictionary. This leaves a trail of breadcrumbs pointing back to the start.
+        </li>
+        <li>
+            <strong>Trace Back:</strong> As soon as the destination is reached, BFS stops searching. We follow the breadcrumbs backward from the destination to the start, and reverse the list to obtain the complete shortest route.
+        </li>
+    </ol>
+
+    <h3>Why We Used an Adjacency List</h3>
+    <p>
+        We chose an adjacency list (a Python dictionary mapping each building to its list of neighboring buildings) because our campus network is sparse. With 20 buildings and only 29 walkways, most buildings only have 2 to 5 connections. An adjacency list uses minimal memory and allows BFS to inspect a building's immediate neighbors instantly without checking hundreds of empty grid cells.
+    </p>
+</section>
+{% endblock %}

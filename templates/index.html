@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Card 1: Route Search Form -->
+<section class="card">
+    <h2>Find the Shortest Walking Route</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="start">Start Building:</label>
+            <select name="start" id="start" class="form-select">
+                {% for building in buildings %}
+                    <option value="{{ building }}" {% if building == start %}selected{% endif %}>
+                        {{ building }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="destination">Destination Building:</label>
+            <select name="destination" id="destination" class="form-select">
+                {% for building in buildings %}
+                    <option value="{{ building }}" {% if building == destination %}selected{% endif %}>
+                        {{ building }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <fieldset class="checkbox-fieldset">
+            <legend>Closed buildings (BFS will avoid these):</legend>
+            <div class="checkbox-grid">
+                {% for building in buildings %}
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="blocked_buildings" value="{{ building }}"
+                            {% if building in blocked_buildings %}checked{% endif %}>
+                        {{ building }}
+                    </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+
+        <button type="submit" class="btn-primary">Find Route</button>
+    </form>
+</section>
+
+<!-- Card 2: Results and BFS Details (shown after submission) -->
+{% if error_message %}
+    <section class="card">
+        <div class="notice-box">
+            <strong>Notice:</strong> {{ error_message }}
+        </div>
+    </section>
+{% elif route is not none %}
+    <section class="card">
+        {% if start == destination %}
+            <div class="info-box">
+                You are already at <strong>{{ start }}</strong>! No walking needed.
+            </div>
+        {% else %}
+            <h3>Route Details</h3>
+            <p><strong>Path:</strong> {{ route|join(" &rarr; ") }}</p>
+            <p><strong>Number of stops (hops):</strong> {{ hops }}</p>
+        {% endif %}
+
+        {% if sorted_levels %}
+            <h3>BFS Exploration by Level</h3>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Buildings found</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for level_number, buildings_in_level in sorted_levels %}
+                            <tr>
+                                <td>Level {{ level_number }}</td>
+                                <td>{{ buildings_in_level|join(", ") }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </section>
+{% endif %}
+
+<!-- Card 3: Campus Map -->
+<section class="card">
+    <h3>Campus Map</h3>
+    <div class="map-container">
+        <img src="data:image/png;base64,{{ map_image }}" alt="Campus Map" class="map-image">
+    </div>
+</section>
+{% endblock %}

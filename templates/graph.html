@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="card">
+    <h2>Campus Graph Structure (Adjacency List)</h2>
+    <p>Below is the internal graph representation mapping each campus building to its list of reachable neighbors.</p>
+
+    <div class="table-wrapper">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Building</th>
+                    <th>Neighbors</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for building, neighbors in campus_graph.items() %}
+                    <tr>
+                        <td><strong>{{ building }}</strong></td>
+                        <td>{{ neighbors|join(", ") }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+
+    <p><strong>Total Buildings (Nodes):</strong> {{ total_buildings }}</p>
+    <p><strong>Total Walkways (Edges):</strong> {{ total_edges }}</p>
+</section>
+{% endblock %}
